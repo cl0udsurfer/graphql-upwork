@@ -2,12 +2,22 @@ import { gql } from 'apollo-server-express';
 
 export const typeDefs = gql`
   type Job {
-    title: String
-    link: String
+    _id: String!
+    title: String!
+    link: String!
+    favourite: Boolean!
   }
 
   type Query {
     userId: String!
-    jobs(url: String!): [Job]
+    job(id: String!): Job!
+    jobs: [Job]
+    favourites: [Job]
+  }
+
+  type Mutation {
+    saveJobs(url: String!): [Job]
+    deleteJob(id: String!): Job
+    addFavourite(id: String!): Job
   }
 `;
