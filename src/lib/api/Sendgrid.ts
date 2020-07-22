@@ -1,5 +1,5 @@
 import sgMail from '@sendgrid/mail';
-sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+// sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
 export const SendGrid = {
   sendMail: async (
@@ -18,6 +18,10 @@ export const SendGrid = {
               `,
     };
 
-    await sgMail.send(emailData);
+    try {
+      await sgMail.send(emailData);
+    } catch (err) {
+      console.log(err);
+    }
   },
 };
