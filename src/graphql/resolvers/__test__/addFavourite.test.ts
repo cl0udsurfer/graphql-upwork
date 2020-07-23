@@ -12,23 +12,33 @@ const ADD_FAVOURITE = gql`
   }
 `;
 
+const db = mongoose.connection.collection('jobs');
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: () => ({
-    _id: '123',
-    title: 'Upwork Test Job',
-    link: 'https://upwork.com/job/test',
-    favourite: false,
+    db,
   }),
 });
 
 const { mutate } = createTestClient(server);
 
 test('Sets favourite-property of selected job as true', async () => {
-  const res = await mutate({ mutation: ADD_FAVOURITE });
+  await db.insertOne({
+    _id: '123',
+    title: 'Upwork Test Job',
+    link: 'https://upwork.com/job/test',
+    favourite: false,
+  });
 
-  expect(res).toBe({
+  await mutate({ mutation: ADD_FAVOURITE });
+
+  const favObject = await db.findOne({});
+
+  console.log(favObject);
+
+  expect(favObject).toBe({
     _id: '123',
     title: 'Upwork Test Job',
     link: 'https://upwork.com/job/test',
